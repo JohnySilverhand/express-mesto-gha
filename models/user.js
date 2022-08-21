@@ -15,8 +15,8 @@ const userSchecma = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: false,
+    required: true,
   },
 });
 
-module.exports = mongoose.model('card', userSchecma);
+module.exports = mongoose.model('user', userSchecma);
