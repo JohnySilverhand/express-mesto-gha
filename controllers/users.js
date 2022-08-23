@@ -23,8 +23,10 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFound') {
         res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
+      } else if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
       } else {
-        res.status(ERROR_CODE).sned({ message: 'Произошла ошибка' });
+        res.status(SERVER_ERROR).sned({ message: 'Произошла ошибка' });
       }
     });
 };
