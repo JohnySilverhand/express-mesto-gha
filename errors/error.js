@@ -1,8 +1,8 @@
-class SomeError extends Error {
+class NotFound extends Error {
   constructor() {
     super();
     this.name = this.constructor.name;
   }
 }
 
-module.exports = SomeError;
+module.exports = NotFound;
