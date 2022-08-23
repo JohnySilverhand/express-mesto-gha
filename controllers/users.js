@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const SomeError = require('../errors/error');
+const NotFound = require('../errors/error');
 const {
   ERROR_CODE, NOT_FOUND, SERVER_ERROR, SUCCESS,
 } = require('../errors/status');
@@ -15,13 +15,13 @@ module.exports.getUsers = (req, res) => {
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      throw new SomeError();
+      throw new NotFound();
     })
     .then((user) => {
       res.send({ user });
     })
     .catch((err) => {
-      if (err.name === 'SomeError') {
+      if (err.name === 'NotFound') {
         res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
       } else if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: 'Пользователь по указанному _id не найден.' });
@@ -56,7 +56,7 @@ module.exports.updateUser = (req, res) => {
     },
   )
     .orFail(() => {
-      throw new SomeError();
+      throw new NotFound();
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
@@ -80,7 +80,7 @@ module.exports.updateAvatar = (req, res) => {
     },
   )
     .orFail(() => {
-      throw new SomeError();
+      throw new NotFound();
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
