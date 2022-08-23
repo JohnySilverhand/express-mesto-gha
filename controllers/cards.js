@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
-      } else if (err.name === 'SomeError') {
+      } else if (err.name === 'NotFound') {
         res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -53,7 +53,7 @@ module.exports.likeCard = (req, res) => {
     })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'SomeError') {
+      if (err.name === 'NotFound') {
         res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
       } else if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
@@ -74,9 +74,9 @@ module.exports.dislikeCard = (req, res) => {
     })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'NotFound') {
+      if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
-      } else if (err.name === 'SomeError') {
+      } else if (err.name === 'NotFound') {
         res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });

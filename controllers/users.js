@@ -86,7 +86,7 @@ module.exports.updateAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
-      } else if (err.name === 'SomeError') {
+      } else if (err.name === 'NotFound') {
         res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
