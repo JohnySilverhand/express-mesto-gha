@@ -22,9 +22,9 @@ module.exports.getUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
-        res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
       } else if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
+        res.status(ERROR_CODE).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(SERVER_ERROR).sned({ message: 'Произошла ошибка' });
       }
