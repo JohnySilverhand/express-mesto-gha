@@ -11,6 +11,6 @@ userRouter.post('/users', createUser);
 
 userRouter.patch('/users/me', updateUser);
 
-userRouter.patch('users/me/avatar', updateAvatar);
+userRouter.patch('/users/me/avatar', updateAvatar);
 
 module.exports = userRouter;

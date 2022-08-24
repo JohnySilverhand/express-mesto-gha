@@ -25,7 +25,7 @@ app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res) => {
   res.status(NOT_FOUND).send({
-    message: 'Произошла ошибка',
+    message: 'Страница не найдена',
   });
 });
 
