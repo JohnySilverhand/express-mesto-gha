@@ -62,6 +62,8 @@ module.exports.updateUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
+      } else if (err.name === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
       }
@@ -85,9 +87,9 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Произошла ошибка' });
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else if (err.name === 'NotFound') {
-        res.status(NOT_FOUND).send({ message: 'Произошла ошибка' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
       }
