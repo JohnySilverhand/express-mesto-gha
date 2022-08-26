@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/JohnySilverhand/express-mesto-gha.git"
   },
-  "author": "",
+  "author": "Leontev Dusha",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JohnySilverhand/express-mesto-gha/issues"
