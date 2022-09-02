@@ -33,6 +33,24 @@ module.exports.getUser = (req, res) => {
     });
 };
 
+module.exports.getUserInfo = (req, res, next) => {
+  const userId = req.user_id;
+  User.findById(userId)
+    .orFail(() => {
+      throw new NotFound('Пользователь по указанному _id не найден.');
+    })
+    .then((user) => {
+      res.send({ user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next();
+      } else {
+        next(err);
+      }
+    });
+};
+
 module.exports.createUser = (req, res) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
@@ -110,7 +128,7 @@ module.exports.login = (req, res, next) => {
   const {email, password} = req.body;
   return User.findUserByCrendentails(email, password)
     .then((user) => {
-      const token = jwt.sign({_id: user._id}, 'secret-key', {expiresIn: '2d'});
+      const token = jwt.sign({_id: user._id}, 'secret-key', {expiresIn: '7d'});
       return res.send({token});
     })
     .catch(next);

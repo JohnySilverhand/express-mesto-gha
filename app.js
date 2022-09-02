@@ -1,7 +1,9 @@
 const express = require('express');
+const { Joi, celebrate } = require('celebrate');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
+const { login, createUser } = require('./controllers/users');
 const cardRouter = require('./routes/cards');
 const { NOT_FOUND } = require('./errors/status');
 
@@ -14,6 +16,22 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email({ tlds: {allow: false} }),
+    password: Joi.string().required(),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(/https?:\/\/(\w{3}\.)?[1-9a-z\-.]{1,}\w\w(\/[1-90a-z.,_@%&?+=~/-]{1,}\/?)?#?/i),
+    email: Joi.string().required().email({ tlds: { allow: false } }),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 
 app.use((req, res, next) => {
   req.user = {
