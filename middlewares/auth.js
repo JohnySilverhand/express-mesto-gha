@@ -8,11 +8,11 @@ module.exports = (req, res, next) => {
     throw new UnauthorizedError('Неавторизованный пользователь.');
   }
 
-  const token = authorization.replace('Bearer', '');
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
-    payload = jwt.verify(token, 'secret-key');
+    payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
     next(new UnauthorizedError('Неавторизованный пользователь.'));
     return;
