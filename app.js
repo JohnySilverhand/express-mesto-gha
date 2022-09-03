@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
 const cardRouter = require('./routes/cards');
-const { SERVER_ERROR } = require('./errors/status');
+const SERVER_ERROR = require('./errors/status');
 const NotFound = require('./errors/error');
 const auth = require('./middlewares/auth');
 
@@ -36,6 +36,14 @@ app.post('/signup', celebrate({
 }), createUser);
 
 app.use(auth);
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
+app.use('*', (req, res, next) => {
+  next(new NotFound('Страница не найдена'));
+});
+
+app.use(errors());
+
 app.use((err, req, res, next) => {
   if (err.status) {
     res.status(err.status).send({ message: err.message });
@@ -44,13 +52,6 @@ app.use((err, req, res, next) => {
   }
   next();
 });
-app.use('/', userRouter);
-app.use('/', cardRouter);
-app.use('*', (req, res, next) => {
-  next(new NotFound('Страница не найдена'));
-});
-
-app.use(errors());
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
