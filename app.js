@@ -1,11 +1,13 @@
 const express = require('express');
-const { Joi, celebrate } = require('celebrate');
+const { errors, Joi, celebrate } = require('celebrate');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
 const cardRouter = require('./routes/cards');
-const { NOT_FOUND } = require('./errors/status');
+const { SERVER_ERROR } = require('./errors/status');
+const NotFound = require('./errors/error');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -19,7 +21,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email({ tlds: {allow: false} }),
+    email: Joi.string().required().email({ tlds: { allow: false } }),
     password: Joi.string().required(),
   }),
 }), login);
@@ -33,19 +35,22 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6302676494bde53ce031506f',
-  };
+app.use(auth);
+app.use((err, req, res, next) => {
+  if (err.status) {
+    res.status(err.status).send({ message: err.message });
+  } else {
+    res.status(SERVER_ERROR).send({ message: 'Произошла ошибка.' });
+  }
   next();
 });
 app.use('/', userRouter);
 app.use('/', cardRouter);
-app.use('*', (req, res) => {
-  res.status(NOT_FOUND).send({
-    message: 'Страница не найдена',
-  });
+app.use('*', (req, res, next) => {
+  next(new NotFound('Страница не найдена'));
 });
+
+app.use(errors());
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
