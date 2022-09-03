@@ -30,7 +30,7 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.getUserInfo = (req, res, next) => {
-  const userId = req.user_id;
+  const userId = req.user._id;
   User.findById(userId)
     .orFail(() => {
       throw new NotFound('Пользователь по указанному _id не найден.');
